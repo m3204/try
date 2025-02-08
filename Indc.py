@@ -95,3 +95,72 @@ axs[4].legend()
 # Display the plot
 plt.tight_layout()
 plt.show()
+
+
+# new code
+
+# Function to optimize parameters
+def optimize_parameters(cmo_periods, fast_windows, slow_windows):
+    best_total_return = -np.inf
+    best_params = None
+    best_portfolio = None
+
+    # Grid search over CMO periods, fast PRMA windows, and slow PRMA windows
+    param_grid = ParameterGrid({
+        'cmo_period': cmo_periods,
+        'fast_window': fast_windows,
+        'slow_window': slow_windows
+    })
+
+    for params in param_grid:
+        # Reload the original dataframe for each iteration
+        df_copy = df.copy()
+
+        # Calculate CMO with current period
+        df_copy = chande_momentum_oscillator(df_copy, period=params['cmo_period'])
+
+        # Calculate PRMA with different windows
+        fast_prma = prma(df_copy['Close'], window=params['fast_window'], degree=2)
+        slow_prma = prma(df_copy['Close'], window=params['slow_window'], degree=2)
+
+        # Align PRMA values to match original dataframe length
+        fast_prma = [np.nan] * (params['fast_window'] - 1) + fast_prma
+        slow_prma = [np.nan] * (params['slow_window'] - 1) + slow_prma
+
+        df_copy['Fast_PRMA'] = fast_prma
+        df_copy['Slow_PRMA'] = slow_prma
+
+        # Define Entry and Exit Signals based on PRMA crossovers
+        df_copy['Entry'] = (
+            (df_copy['CMO'] < -50) &  # CMO is below -50
+            (df_copy['Fast_PRMA'] > df_copy['Slow_PRMA'])  # Current Fast PRMA crosses above Slow PRMA
+        )
+
+        df_copy['Exit'] = (
+            (df_copy['CMO'] > 50) &  # CMO is above +50
+            (df_copy['Fast_PRMA'] < df_copy['Slow_PRMA'])  # Current Fast PRMA crosses below Slow PRMA
+        )
+
+        # Convert signals to boolean arrays
+        entries = df_copy['Entry'].to_numpy()
+        exits = df_copy['Exit'].to_numpy()
+
+        # Backtest using vectorbt
+        portfolio = vbt.Portfolio.from_signals(
+            close=df_copy['Close'],
+            entries=entries,
+            exits=exits,
+            init_cash=100_000,
+            fees=0.001
+        )
+
+        # Calculate Total Return for performance
+        total_return = portfolio.stats()['Total Return [%]']
+
+        # Keep track of the best parameters based on Total Return
+        if total_return > best_total_return:
+            best_total_return = total_return
+            best_params = params
+            best_portfolio = portfolio
+
+    return best_params, best_portfolio
