@@ -99,6 +99,20 @@ plt.show()
 
 # new code
 
+# Function: Polynomial Regression Moving Average (PRMA)
+def prma(series, window, degree=2):
+    return [np.polyval(np.polyfit(range(window), series[i:i+window], degree), window-1)
+            for i in range(len(series) - window + 1)]
+
+# Function: Chande Momentum Oscillator (CMO)
+def chande_momentum_oscillator(df, period=14):
+    df['Up'] = np.where(df['Close'] > df['Close'].shift(1), df['Close'] - df['Close'].shift(1), 0)
+    df['Down'] = np.where(df['Close'] < df['Close'].shift(1), df['Close'].shift(1) - df['Close'], 0)
+    df['SumUp'] = df['Up'].rolling(window=period).sum()
+    df['SumDown'] = df['Down'].rolling(window=period).sum()
+    df['CMO'] = 100 * (df['SumUp'] - df['SumDown']) / (df['SumUp'] + df['SumDown'])
+    return df
+    
 # Function to optimize parameters
 def optimize_parameters(cmo_periods, fast_windows, slow_windows):
     best_total_return = -np.inf
