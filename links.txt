@@ -1,1 +1,2 @@
 Bootstrap : https://github.com/OrnlyP63/Medium/blob/main/bootstrapping/Medium-Bootstrapping.ipynb
+Bootstrap : https://medium.com/@polanitzer/monte-carlo-methods-part-4-bootstrap-simulation-method-predicting-bitcoin-one-year-expected-6f547e1181be
