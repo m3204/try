@@ -1,0 +1,1 @@
+Bootstrap : https://github.com/OrnlyP63/Medium/blob/main/bootstrapping/Medium-Bootstrapping.ipynb
