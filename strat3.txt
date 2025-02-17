@@ -1,0 +1,70 @@
+**Highly Profitable OHLC-Based Trading Strategy**
+
+This strategy combines trend-following, momentum, and volume analysis across multiple timeframes to maximize accuracy. It leverages concepts from the TMV framework (Trend, Momentum, Volume) outlined in the PDF.
+
+---
+
+### **Strategy Components**
+1. **Trend Identification (Daily Chart)**  
+   - **Primary Trend**: 89 EMA Band  
+     - **Long**: Price > 89 EMA.  
+     - **Short**: Price < 89 EMA.  
+   - **Confirmation**: ADX > 25 to confirm trend strength.  
+
+2. **Entry Signal (15-Minute Chart)**  
+   - **Trigger**:  
+     - **Bullish**: 8 EMA crosses above 21 EMA + price closes above VWAP.  
+     - **Bearish**: 8 EMA crosses below 21 EMA + price closes below VWAP.  
+   - **Momentum Filter**:  
+     - RSI (14-period) must be > 50 for longs, < 50 for shorts.  
+     - MACD histogram must be expanding in the trend direction.  
+
+3. **Volume Confirmation**  
+   - **Bullish**: Rising volume on upward price movement.  
+   - **Bearish**: Rising volume on downward price movement.  
+   - Reject trades if volume is below 20-day average (indicates weak participation).  
+
+4. **Multi-Timeframe Confluence**  
+   - Check alignment with 1-hour chart:  
+     - Price must be above/below 21 EMA on 1H for directional bias.  
+     - SuperTrend (10,3) must align with the trade direction (green for long, red for short).  
+
+5. **Exit Rules**  
+   - **Profit Target**: 2x ATR (14-period) from entry point.  
+   - **Trailing Stop**: SuperTrend (10,3) on the 15-minute chart.  
+   - **Stop-Loss**: Below 5 EMA for longs / Above 5 EMA for shorts.  
+
+---
+
+### **Example Trade Setup**
+- **Long Entry**:  
+  1. Daily chart shows price > 89 EMA + ADX > 25.  
+  2. 15-minute chart: 8 EMA crosses above 21 EMA, RSI > 50, MACD histogram rising.  
+  3. Price closes above VWAP with above-average volume.  
+  4. Confirm 1-hour SuperTrend is green.  
+  5. Enter at candle close, set stop-loss below 5 EMA.  
+
+- **Short Entry**: Reverse conditions.  
+
+---
+
+### **Risk Management**  
+- **Position Sizing**: Risk ≤ 1% of capital per trade.  
+- **Volatility Adjustment**: Use ATR to scale position size (e.g., higher ATR = smaller position).  
+
+---
+
+### **Why It Works**  
+- Combines trend, momentum, and volume for high-probability entries.  
+- Multi-timeframe alignment reduces false signals.  
+- SuperTrend and ATR adapt to market volatility dynamically.  
+
+**Backtest Note**: Test on 2+ years of historical data. Optimize EMA periods and ATR multiples for your asset (e.g., Nifty, BankNifty, stocks).  
+
+--- 
+
+**Visualization**:  
+![Strategy Flowchart](https://via.placeholder.com/400x200/FFFFFF/000000?text=Trend+Momentum+Volume+Alignment)  
+*Replace with actual backtest results or charts.*  
+
+This strategy aligns with the PDF’s emphasis on probability, multi-indicator convergence, and strict risk rules. Adjust parameters based on asset-specific behavior.
